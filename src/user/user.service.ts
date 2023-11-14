@@ -34,7 +34,7 @@ export class UserService {
       },
     });
 
-    if (!users) throw new NotFoundException();
+    if (users.length === 0) throw new NotFoundException();
 
     return users;
   }
