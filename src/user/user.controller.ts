@@ -17,7 +17,7 @@ export class UserController {
   }
 
   @Get(':uuid')
-  findUsersByPartialUUID(@Param('uuid') partialUUID: string) {
-    return this.userService.findUsersByPartialUUID(partialUUID);
+  async findUsersByPartialUUID(@Param('uuid') partialUUID: string) {
+    return await this.userService.findUsersByPartialUUID(partialUUID);
   }
 }
