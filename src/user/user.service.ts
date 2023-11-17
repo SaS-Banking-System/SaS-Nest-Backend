@@ -17,7 +17,7 @@ export class UserService {
         data: createUserDto,
       });
     } catch {
-      throw new ConflictException('conflict');
+      throw new ConflictException();
     }
   }
 

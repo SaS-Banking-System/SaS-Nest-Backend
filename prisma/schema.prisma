@@ -11,15 +11,16 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement()) 
-  uuid String @unique
+  id      Int    @id @default(autoincrement())
+  uuid    String @unique
+  locked    Boolean  @default(false)
   balance Int
 }
 
 model Transaction {
-  id Int @id @default(autoincrement())
-  sender String 
-  receiver String
-  amount Int
+  id        Int      @id @default(autoincrement())
+  sender    String
+  receiver  String
+  amount    Int
   createdAt DateTime @default(now())
-} 
+}

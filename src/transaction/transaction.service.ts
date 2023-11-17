@@ -28,13 +28,16 @@ export class TransactionService {
           throw new HttpException('sender not found', HttpStatus.FORBIDDEN);
         });
 
+      if (sender.locked)
+        throw new HttpException('sender is locked', HttpStatus.FORBIDDEN);
+
       if (sender.balance < 0)
         throw new HttpException(
           'sender balance less than 0',
           HttpStatus.FORBIDDEN,
         );
 
-      await tx.user
+      const receiver = await tx.user
         .update({
           where: {
             uuid: createTransactionDto.receiver,
@@ -56,6 +59,9 @@ export class TransactionService {
           amount: createTransactionDto.amount,
         },
       });
+
+      if (receiver.locked)
+        throw new HttpException('receiver is locked', HttpStatus.FORBIDDEN);
 
       return sender;
     });
