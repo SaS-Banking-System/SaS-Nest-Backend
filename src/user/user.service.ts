@@ -1,15 +1,17 @@
 import {
   ConflictException,
+  HttpException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async createUser(createUserDto: CreateUserDto) {
     try {
@@ -53,5 +55,15 @@ export class UserService {
     if (users.length === 0) throw new NotFoundException();
 
     return users;
+  }
+
+  async existsUser(uuid: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        uuid: uuid
+      }
+    })
+
+    if (!user) throw new NotFoundException();
   }
 }
