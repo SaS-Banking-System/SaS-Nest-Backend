@@ -11,6 +11,11 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get('info/:uuid')
+  async getUserInfo(@Param('uuid') uuid: string) {
+    return await this.userService.getUserInfo(uuid);
+  }
+
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto) {
     await this.userService.createUser(createUserDto);

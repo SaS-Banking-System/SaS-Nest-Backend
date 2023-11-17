@@ -25,6 +25,22 @@ export class UserService {
     return this.prisma.user.findMany();
   }
 
+  async getUserInfo(uuid: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        uuid: uuid,
+      },
+    });
+
+    const userTransactions = await this.prisma.transaction.findMany({
+      where: {
+        OR: [{ sender: uuid }, { receiver: uuid }],
+      },
+    });
+
+    return { user: user, transactions: userTransactions };
+  }
+
   async findUsersByPartialUUID(partialUUID: string): Promise<User[]> {
     const users = await this.prisma.user.findMany({
       where: {
