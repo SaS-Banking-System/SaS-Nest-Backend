@@ -1,4 +1,39 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class TransactionService {}
+export class TransactionService {
+  constructor(private readonly prisma: PrismaService) { }
+
+  async newTransaction(createTransactionDto: CreateTransactionDto) {
+    return await this.prisma.$transaction(async (tx) => {
+
+      const sender = await tx.user.update({
+        where: {
+          uuid: createTransactionDto.sender
+        },
+        data: {
+          balance: {
+            decrement: createTransactionDto.amount
+          }
+        }
+      }).catch(() => { throw new HttpException('sender not found', HttpStatus.FORBIDDEN) });
+
+      if (sender.balance < 0) throw new HttpException('sender balance less than 0', HttpStatus.FORBIDDEN);
+
+      await tx.user.update({
+        where: {
+          uuid: createTransactionDto.receiver
+        },
+        data: {
+          balance: {
+            increment: createTransactionDto.amount
+          }
+        }
+      }).catch(() => { throw new HttpException('receiver not found', HttpStatus.FORBIDDEN) });
+
+      return sender;
+    })
+  }
+}
