@@ -1,10 +1,15 @@
-import { Post, Controller, Body, HttpCode } from '@nestjs/common'
+import { Get, Post, Controller, Body, HttpCode } from '@nestjs/common'
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 
 @Controller('transaction')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) { }
+
+  @Get()
+  async findAll() {
+    return await this.transactionService.findAll();
+  }
 
   @Post('new')
   @HttpCode(200)

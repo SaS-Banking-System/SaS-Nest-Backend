@@ -6,6 +6,11 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class TransactionService {
   constructor(private readonly prisma: PrismaService) { }
 
+  async findAll() {
+    const transctions = await this.prisma.transaction.findMany();
+    return transctions;
+  }
+
   async newTransaction(createTransactionDto: CreateTransactionDto) {
     return await this.prisma.$transaction(async (tx) => {
 
@@ -32,6 +37,14 @@ export class TransactionService {
           }
         }
       }).catch(() => { throw new HttpException('receiver not found', HttpStatus.FORBIDDEN) });
+
+      await tx.transaction.create({
+        data: {
+          sender: createTransactionDto.sender,
+          receiver: createTransactionDto.receiver,
+          amount: createTransactionDto.amount,
+        }
+      })
 
       return sender;
     })

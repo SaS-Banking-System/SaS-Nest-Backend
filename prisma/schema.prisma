@@ -16,10 +16,10 @@ model User {
   balance Int
 }
 
-model Transactions {
+model Transaction {
   id Int @id @default(autoincrement())
-  from String 
-  to String
+  sender String 
+  receiver String
   amount Int
   createdAt DateTime @default(now())
 } 
