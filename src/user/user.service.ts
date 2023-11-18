@@ -11,7 +11,7 @@ import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async createUser(createUserDto: CreateUserDto) {
     try {
@@ -60,9 +60,9 @@ export class UserService {
   async existsUser(uuid: string) {
     const user = await this.prisma.user.findUnique({
       where: {
-        uuid: uuid
-      }
-    })
+        uuid: uuid,
+      },
+    });
 
     if (!user) throw new NotFoundException();
   }
