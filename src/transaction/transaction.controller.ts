@@ -5,7 +5,7 @@ import { ApiForbiddenResponse, ApiOkResponse } from '@nestjs/swagger';
 
 @Controller('transaction')
 export class TransactionController {
-  constructor(private readonly transactionService: TransactionService) { }
+  constructor(private readonly transactionService: TransactionService) {}
 
   @Get()
   @ApiOkResponse({
