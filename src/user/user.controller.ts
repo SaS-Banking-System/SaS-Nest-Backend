@@ -6,7 +6,6 @@ import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiOperation,
 } from '@nestjs/swagger';
 
 @Controller('user')

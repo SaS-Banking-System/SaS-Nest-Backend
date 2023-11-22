@@ -5,7 +5,7 @@ import { ApiForbiddenResponse, ApiOkResponse } from '@nestjs/swagger';
 
 @Controller('transaction')
 export class TransactionController {
-  constructor(private readonly transactionService: TransactionService) {}
+  constructor(private readonly transactionService: TransactionService) { }
 
   @Get()
   @ApiOkResponse({
@@ -15,14 +15,14 @@ export class TransactionController {
     return await this.transactionService.findAll();
   }
 
+  @Post('new')
+  @HttpCode(200)
   @ApiOkResponse({
     description: 'Transaction was successful',
   })
   @ApiForbiddenResponse({
     description: 'Something went wrong',
   })
-  @Post('new')
-  @HttpCode(200)
   async createTransaction(@Body() createTransactionDto: CreateTransactionDto) {
     const sender =
       await this.transactionService.newTransaction(createTransactionDto);
