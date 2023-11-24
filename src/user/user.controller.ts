@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Param, Body, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  HttpCode,
+  Patch,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import {
@@ -64,7 +72,7 @@ export class UserController {
     return await this.userService.existsUser(uuid);
   }
 
-  @Post('lock/:uuid')
+  @Patch('lock/:uuid')
   @HttpCode(200)
   @ApiOkResponse({
     description: 'Locks a user with a given uuid',
@@ -76,7 +84,7 @@ export class UserController {
     await this.userService.lockUser(uuid);
   }
 
-  @Post('unlock/:uuid')
+  @Patch('unlock/:uuid')
   @HttpCode(200)
   @ApiOkResponse({
     description: 'Unlocks user with given uuid',
