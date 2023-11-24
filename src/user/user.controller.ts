@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, HttpCode } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import {
@@ -10,7 +10,7 @@ import {
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Get()
   @ApiOkResponse({
@@ -65,6 +65,7 @@ export class UserController {
   }
 
   @Post('lock/:uuid')
+  @HttpCode(200)
   @ApiOkResponse({
     description: 'Locks a user with a given uuid',
   })
@@ -76,6 +77,7 @@ export class UserController {
   }
 
   @Post('unlock/:uuid')
+  @HttpCode(200)
   @ApiOkResponse({
     description: 'Unlocks user with given uuid',
   })
