@@ -1,7 +1,7 @@
 import {
   ConflictException,
-  Injectable,
   NotFoundException,
+  Injectable,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -12,13 +12,13 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createUser(createUserDto: CreateUserDto) {
-    try {
-      await this.prisma.user.create({
+    await this.prisma.user
+      .create({
         data: createUserDto,
+      })
+      .catch(() => {
+        throw new ConflictException();
       });
-    } catch {
-      throw new ConflictException();
-    }
   }
 
   async findAll() {
@@ -65,5 +65,35 @@ export class UserService {
     });
 
     if (!user) throw new NotFoundException();
+  }
+
+  async lockUser(uuid: string) {
+    await this.prisma.user
+      .update({
+        where: {
+          uuid: uuid,
+        },
+        data: {
+          locked: true,
+        },
+      })
+      .catch(() => {
+        throw new NotFoundException('User with supplied uuid not found');
+      });
+  }
+
+  async unlockUser(uuid: string) {
+    await this.prisma.user
+      .update({
+        where: {
+          uuid: uuid,
+        },
+        data: {
+          locked: false,
+        },
+      })
+      .catch(() => {
+        throw new NotFoundException('User with supplied uuid not found');
+      });
   }
 }

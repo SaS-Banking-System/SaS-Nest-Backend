@@ -10,7 +10,7 @@ import {
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Get()
   @ApiOkResponse({
@@ -62,5 +62,27 @@ export class UserController {
   })
   async checkUserExists(@Param('uuid') uuid: string) {
     return await this.userService.existsUser(uuid);
+  }
+
+  @Post('lock/:uuid')
+  @ApiOkResponse({
+    description: 'Locks a user with a given uuid',
+  })
+  @ApiNotFoundResponse({
+    description: 'User with supplied uuid not found',
+  })
+  async lockUser(@Param('uuid') uuid: string) {
+    await this.userService.lockUser(uuid);
+  }
+
+  @Post('unlock/:uuid')
+  @ApiOkResponse({
+    description: 'Unlocks user with given uuid',
+  })
+  @ApiNotFoundResponse({
+    description: 'User with supplied uuid not found',
+  })
+  async unlockUser(@Param('uuid') uuid: string) {
+    await this.userService.unlockUser(uuid);
   }
 }
