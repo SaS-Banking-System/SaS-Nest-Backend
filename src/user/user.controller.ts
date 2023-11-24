@@ -20,7 +20,7 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Post()
+  @Post('new')
   @ApiCreatedResponse({
     description: 'Create a user',
   })
