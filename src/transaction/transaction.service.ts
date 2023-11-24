@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { ForbiddenException } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -25,17 +25,13 @@ export class TransactionService {
           },
         })
         .catch(() => {
-          throw new HttpException('sender not found', HttpStatus.FORBIDDEN);
+          throw new ForbiddenException('sender not found');
         });
 
-      if (sender.locked)
-        throw new HttpException('sender is locked', HttpStatus.FORBIDDEN);
+      if (sender.locked) throw new ForbiddenException('sender is locked');
 
       if (sender.balance < 0)
-        throw new HttpException(
-          'sender balance less than 0',
-          HttpStatus.FORBIDDEN,
-        );
+        throw new ForbiddenException('sender balance to low');
 
       const receiver = await tx.user
         .update({
@@ -49,7 +45,7 @@ export class TransactionService {
           },
         })
         .catch(() => {
-          throw new HttpException('receiver not found', HttpStatus.FORBIDDEN);
+          throw new ForbiddenException('receiver not found');
         });
 
       await tx.transaction.create({
@@ -60,8 +56,7 @@ export class TransactionService {
         },
       });
 
-      if (receiver.locked)
-        throw new HttpException('receiver is locked', HttpStatus.FORBIDDEN);
+      if (receiver.locked) throw new ForbiddenException('receiver locked');
 
       return sender;
     });
