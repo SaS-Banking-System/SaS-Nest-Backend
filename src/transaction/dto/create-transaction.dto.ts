@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString } from 'class-validator';
+import { IsInt, IsString, Min } from 'class-validator';
 
 export class CreateTransactionDto {
   @ApiProperty({
@@ -21,5 +21,6 @@ export class CreateTransactionDto {
     type: Number,
   })
   @IsInt()
+  @Min(1)
   readonly amount: number;
 }
