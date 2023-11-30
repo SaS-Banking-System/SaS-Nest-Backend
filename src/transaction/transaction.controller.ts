@@ -1,12 +1,21 @@
-import { Get, Post, Controller, Body, HttpCode } from '@nestjs/common';
+import {
+  Get,
+  Post,
+  Controller,
+  Body,
+  HttpCode,
+  UseGuards,
+} from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { ApiForbiddenResponse, ApiOkResponse } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('transaction')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
+  @UseGuards(AuthGuard)
   @Get()
   @ApiOkResponse({
     description: 'Get all transactions',

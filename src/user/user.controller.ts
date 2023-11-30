@@ -6,6 +6,7 @@ import {
   Body,
   HttpCode,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,11 +16,13 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
 } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(AuthGuard)
   @Get()
   @ApiOkResponse({
     description: 'Find all users',
@@ -28,6 +31,7 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @UseGuards(AuthGuard)
   @Post('new')
   @ApiCreatedResponse({
     description: 'Create a user',
@@ -39,6 +43,7 @@ export class UserController {
     await this.userService.createUser(createUserDto);
   }
 
+  @UseGuards(AuthGuard)
   @Get(':uuid')
   @ApiOkResponse({
     description: 'Find user by uuid',
@@ -72,6 +77,7 @@ export class UserController {
     return await this.userService.existsUser(uuid);
   }
 
+  @UseGuards(AuthGuard)
   @Patch('lock/:uuid')
   @HttpCode(200)
   @ApiOkResponse({
@@ -84,6 +90,7 @@ export class UserController {
     await this.userService.lockUser(uuid);
   }
 
+  @UseGuards(AuthGuard)
   @Patch('unlock/:uuid')
   @HttpCode(200)
   @ApiOkResponse({
