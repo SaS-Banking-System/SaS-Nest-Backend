@@ -9,7 +9,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Online-Banking API')
-    .setDescription('The Online-Banking description')
+    .setDescription(
+      'Online-Banking API for the [frontend](https://github.com/SaS-Banking-System/SaS-Web-Frontend)',
+    )
     .setVersion('0.1')
     .build();
   const document = SwaggerModule.createDocument(app, config);
