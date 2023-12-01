@@ -3,6 +3,9 @@
 /dist
 /node_modules
 
+#prisma db
+/prisma/dev.db
+
 # Logs
 logs
 *.log

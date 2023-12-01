@@ -10,10 +10,16 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+model Admin {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+}
+
 model User {
-  id      Int    @id @default(autoincrement())
-  uuid    String @unique
-  locked    Boolean  @default(false)
+  id      Int     @id @default(autoincrement())
+  uuid    String  @unique
+  locked  Boolean @default(false)
   balance Int
 }
 
