@@ -7,15 +7,14 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
-  ) { }
+  ) {}
 
   async signIn(username: string, password: string) {
-    const admin = await this.prisma.admin
-      .findUnique({
-        where: {
-          username: username,
-        },
-      })
+    const admin = await this.prisma.admin.findUnique({
+      where: {
+        username: username,
+      },
+    });
 
     if (!admin) throw new UnauthorizedException();
 
