@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { compare as bcrypt_compare } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +19,9 @@ export class AuthService {
 
     if (!admin) throw new UnauthorizedException();
 
-    if (admin.username === username && admin.password === password) {
+    const passwordResult = await bcrypt_compare(password, admin.password);
+
+    if (admin.username === username && passwordResult) {
       const payload = { sub: admin.id, username: username };
 
       return {
