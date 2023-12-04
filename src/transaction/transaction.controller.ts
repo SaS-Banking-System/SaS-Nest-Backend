@@ -8,13 +8,14 @@ import {
 } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { ApiForbiddenResponse, ApiOkResponse } from '@nestjs/swagger';
+import { ApiForbiddenResponse, ApiOkResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('transaction')
 export class TransactionController {
-  constructor(private readonly transactionService: TransactionService) {}
+  constructor(private readonly transactionService: TransactionService) { }
 
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Get()
   @ApiOkResponse({

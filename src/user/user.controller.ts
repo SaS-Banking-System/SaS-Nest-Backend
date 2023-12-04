@@ -11,6 +11,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import {
+  ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiNotFoundResponse,
@@ -20,8 +21,9 @@ import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Get()
   @ApiOkResponse({
@@ -31,6 +33,7 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Post('new')
   @ApiCreatedResponse({
@@ -43,6 +46,7 @@ export class UserController {
     await this.userService.createUser(createUserDto);
   }
 
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Get(':uuid')
   @ApiOkResponse({
@@ -77,6 +81,7 @@ export class UserController {
     return await this.userService.existsUser(uuid);
   }
 
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Patch('lock/:uuid')
   @HttpCode(200)
@@ -90,6 +95,7 @@ export class UserController {
     await this.userService.lockUser(uuid);
   }
 
+  @ApiBearerAuth()
   @UseGuards(AuthGuard)
   @Patch('unlock/:uuid')
   @HttpCode(200)

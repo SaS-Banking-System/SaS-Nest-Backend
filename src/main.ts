@@ -8,6 +8,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Online-Banking API')
     .setDescription(
       'Online-Banking API for the [frontend](https://github.com/SaS-Banking-System/SaS-Web-Frontend)',
