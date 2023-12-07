@@ -1,4 +1,6 @@
+import { IsString } from 'class-validator';
+
 export class DeleteAdminDto {
-  accessToken: string;
+  @IsString()
   username: string;
 }

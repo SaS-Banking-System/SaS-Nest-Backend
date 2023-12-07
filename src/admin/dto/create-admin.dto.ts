@@ -1,5 +1,9 @@
+import { IsString } from 'class-validator';
+
 export class CreateAdminDto {
-  accessToken: string;
+  @IsString()
   username: string;
+
+  @IsString()
   password: string;
 }
