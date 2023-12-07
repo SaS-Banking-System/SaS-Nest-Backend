@@ -12,9 +12,11 @@ import {
   ApiForbiddenResponse,
   ApiOkResponse,
   ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 
+@ApiTags('Transaction')
 @Controller('transaction')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
