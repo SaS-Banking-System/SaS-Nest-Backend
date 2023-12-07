@@ -19,9 +19,9 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
   @Get()
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOkResponse({
     description: 'Get all transactions',
   })

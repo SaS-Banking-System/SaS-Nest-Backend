@@ -23,9 +23,9 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
   @Get()
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOkResponse({
     description: 'Find all users',
   })
@@ -33,9 +33,9 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @ApiBearerAuth()
+  @Post('create')
   @UseGuards(AuthGuard)
-  @Post('new')
+  @ApiBearerAuth()
   @ApiCreatedResponse({
     description: 'Create a user',
   })
@@ -46,9 +46,9 @@ export class UserController {
     await this.userService.createUser(createUserDto);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
   @Get(':uuid')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiOkResponse({
     description: 'Find user by uuid',
   })
@@ -81,10 +81,10 @@ export class UserController {
     return await this.userService.existsUser(uuid);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
   @Patch('lock/:uuid')
+  @UseGuards(AuthGuard)
   @HttpCode(200)
+  @ApiBearerAuth()
   @ApiOkResponse({
     description: 'Locks a user with a given uuid',
   })
@@ -95,10 +95,10 @@ export class UserController {
     await this.userService.lockUser(uuid);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard)
   @Patch('unlock/:uuid')
+  @UseGuards(AuthGuard)
   @HttpCode(200)
+  @ApiBearerAuth()
   @ApiOkResponse({
     description: 'Unlocks user with given uuid',
   })

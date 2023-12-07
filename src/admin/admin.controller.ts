@@ -8,14 +8,14 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
-  @UseGuards(AuthGuard)
   @Post('create')
+  @UseGuards(AuthGuard)
   async createAdmin(@Body() createAdminDto: CreateAdminDto) {
     await this.adminService.createAdmin(createAdminDto);
   }
 
-  @UseGuards(AuthGuard)
   @Post('delete')
+  @UseGuards(AuthGuard)
   async deleteAdmin(@Body() deleteAdminDto: DeleteAdminDto) {
     await this.adminService.deleteAdmin(deleteAdminDto);
   }
