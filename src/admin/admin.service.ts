@@ -8,6 +8,16 @@ import { DeleteAdminDto } from './dto/delete-admin.dto';
 export class AdminService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async findAll() {
+    return await this.prisma.admin.findMany({
+      select: {
+        id: true,
+        username: true,
+        password: false,
+      },
+    });
+  }
+
   async createAdmin(createAdminDto: CreateAdminDto) {
     const hashedPassword = await bcrypt_hash(createAdminDto.password, 10);
 

@@ -1,11 +1,13 @@
-import { Body, Post, Controller, UseGuards } from '@nestjs/common';
+import { Get, Body, Post, Controller, UseGuards } from '@nestjs/common';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { DeleteAdminDto } from './dto/delete-admin.dto';
 import { AdminService } from './admin.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import {
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 
@@ -14,8 +16,22 @@ import {
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
+  @Get()
+  @UseGuards()
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'get all admins',
+  })
+  @ApiForbiddenResponse({
+    description: 'no access',
+  })
+  async findAll() {
+    return this.adminService.findAll();
+  }
+
   @Post('create')
   @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiCreatedResponse({
     description: 'created admin',
   })
@@ -28,6 +44,7 @@ export class AdminController {
 
   @Post('delete')
   @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiCreatedResponse({
     description: 'deleted admin',
   })
