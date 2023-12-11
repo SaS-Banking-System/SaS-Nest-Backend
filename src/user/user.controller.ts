@@ -11,6 +11,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -19,6 +20,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { DeleteUserDto } from './dto/delete-user.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -46,6 +48,19 @@ export class UserController {
   })
   async createUser(@Body() createUserDto: CreateUserDto) {
     await this.userService.createUser(createUserDto);
+  }
+
+  @Post('delete')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'Deleted user',
+  })
+  @ApiBadRequestResponse({
+    description: 'Could not delete user',
+  })
+  async deleteUser(@Body() deleteUserDto: DeleteUserDto) {
+    await this.userService.deleteUser(deleteUserDto);
   }
 
   @Get(':uuid')

@@ -2,10 +2,12 @@ import {
   ConflictException,
   NotFoundException,
   Injectable,
+  BadRequestException,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { DeleteUserDto } from './dto/delete-user.dto';
 
 @Injectable()
 export class UserService {
@@ -18,6 +20,18 @@ export class UserService {
       })
       .catch(() => {
         throw new ConflictException();
+      });
+  }
+
+  async deleteUser(deleteUserDto: DeleteUserDto) {
+    await this.prisma.user
+      .delete({
+        where: {
+          uuid: deleteUserDto.uuid,
+        },
+      })
+      .catch(() => {
+        throw new BadRequestException('could not delete user');
       });
   }
 
