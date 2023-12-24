@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsString, Min } from 'class-validator';
 
-export class CreateUserDto {
+export class CreateAccountDto {
   @IsString()
   @ApiProperty({
-    description: 'uuid of the user, must be unique',
+    description: 'uuid of the account, must be unique',
     type: String,
   })
   uuid: string;
@@ -12,7 +12,7 @@ export class CreateUserDto {
   @IsInt()
   @Min(0)
   @ApiProperty({
-    description: 'startbalance of the user',
+    description: 'startbalance of the account',
     type: Number,
     minimum: 0,
   })
