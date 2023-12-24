@@ -16,11 +16,19 @@ model Admin {
   password String
 }
 
-model User {
+model Accounts {
   id      Int     @id @default(autoincrement())
   uuid    String  @unique
   locked  Boolean @default(false)
   balance Int
+}
+
+model CompanyData {
+  id        Int    @id @default(autoincrement())
+  uuid      String @unique
+  name      String @unique
+  code      Int    @unique
+  taxAmount Float
 }
 
 model Transaction {
@@ -28,5 +36,6 @@ model Transaction {
   sender    String
   receiver  String
   amount    Int
+  tax       Int?      @default(0)
   createdAt DateTime @default(now())
 }

@@ -2,6 +2,7 @@ import { ForbiddenException } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import 'dotenv/config';
 
 @Injectable()
 export class TransactionService {
@@ -14,28 +15,47 @@ export class TransactionService {
 
   async newTransaction(createTransactionDto: CreateTransactionDto) {
     return await this.prisma.$transaction(async (tx) => {
-      const sender = await tx.user
-        .update({
-          where: {
-            uuid: createTransactionDto.sender,
-          },
-          data: {
-            balance: {
-              decrement: createTransactionDto.amount,
-            },
-          },
-        })
-        .catch(() => {
-          throw new ForbiddenException('sender not found');
-        });
+      const receiver = await tx.accounts.findUnique({
+        where: {
+          uuid: createTransactionDto.receiver,
+        },
+      });
 
+      const sender = await tx.accounts.findUnique({
+        where: {
+          uuid: createTransactionDto.sender,
+        },
+      });
+
+      if (!sender) throw new ForbiddenException('sender not found');
       if (sender.locked) throw new ForbiddenException('sender is locked');
 
-      if (sender.balance < 0)
-        throw new ForbiddenException('sender balance to low');
+      if (!receiver) throw new ForbiddenException('receiver not found');
+      if (receiver.locked) throw new ForbiddenException('receiver is locked');
 
-      const receiver = await tx.user
-        .update({
+      const senderAfterTransaction = await tx.accounts.update({
+        where: {
+          uuid: createTransactionDto.sender,
+        },
+        data: {
+          balance: {
+            decrement: createTransactionDto.amount,
+          },
+        },
+      });
+
+      if (senderAfterTransaction.balance < 0)
+        throw new ForbiddenException('sender balance too low');
+
+      const receiverCompanyData = await tx.companyData.findUnique({
+        where: {
+          uuid: createTransactionDto.receiver,
+        },
+      });
+
+      // if receiver is not a company
+      if (!receiverCompanyData) {
+        await tx.accounts.update({
           where: {
             uuid: createTransactionDto.receiver,
           },
@@ -44,22 +64,62 @@ export class TransactionService {
               increment: createTransactionDto.amount,
             },
           },
-        })
-        .catch(() => {
-          throw new ForbiddenException('receiver not found');
         });
 
-      await tx.transaction.create({
-        data: {
-          sender: createTransactionDto.sender,
-          receiver: createTransactionDto.receiver,
-          amount: createTransactionDto.amount,
-        },
-      });
+        await tx.transaction.create({
+          data: {
+            sender: createTransactionDto.sender,
+            receiver: createTransactionDto.receiver,
+            amount: createTransactionDto.amount,
+            // -1 indicates that the transaction was between 2 non company accounts
+            tax: -1,
+          },
+        });
 
-      if (receiver.locked) throw new ForbiddenException('receiver locked');
+        // if receiver is a company
+      } else {
+        // how much tax there is on a company
+        const taxAmount = receiverCompanyData.taxAmount;
 
-      return sender;
+        // amount that the state gets
+        const stateAmount = createTransactionDto.amount * taxAmount;
+
+        // amount that the receiver gets
+        const amountAfterTax = createTransactionDto.amount - stateAmount;
+
+        await tx.accounts.update({
+          where: {
+            uuid: createTransactionDto.receiver,
+          },
+          data: {
+            balance: {
+              increment: amountAfterTax,
+            },
+          },
+        });
+
+        await tx.accounts.update({
+          where: {
+            uuid: process.env.STATE_ACCOUNT,
+          },
+          data: {
+            balance: {
+              increment: stateAmount,
+            },
+          },
+        });
+
+        await tx.transaction.create({
+          data: {
+            sender: createTransactionDto.sender,
+            receiver: createTransactionDto.receiver,
+            amount: amountAfterTax,
+            tax: stateAmount,
+          },
+        });
+      }
+
+      return senderAfterTransaction;
     });
   }
 }

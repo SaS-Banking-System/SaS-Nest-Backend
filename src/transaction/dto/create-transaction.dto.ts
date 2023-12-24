@@ -18,6 +18,7 @@ export class CreateTransactionDto {
 
   @ApiProperty({
     description: 'amount to send',
+    minimum: 1,
     type: Number,
   })
   @IsInt()

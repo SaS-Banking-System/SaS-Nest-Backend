@@ -4,7 +4,6 @@ import {
   Injectable,
   BadRequestException,
 } from '@nestjs/common';
-import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { DeleteUserDto } from './dto/delete-user.dto';
@@ -14,7 +13,7 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createUser(createUserDto: CreateUserDto) {
-    await this.prisma.user
+    await this.prisma.accounts
       .create({
         data: createUserDto,
       })
@@ -24,7 +23,7 @@ export class UserService {
   }
 
   async deleteUser(deleteUserDto: DeleteUserDto) {
-    await this.prisma.user
+    await this.prisma.accounts
       .delete({
         where: {
           uuid: deleteUserDto.uuid,
@@ -36,11 +35,11 @@ export class UserService {
   }
 
   async findAll() {
-    return this.prisma.user.findMany();
+    return this.prisma.accounts.findMany();
   }
 
   async getUserInfo(uuid: string) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.accounts.findUnique({
       where: {
         uuid: uuid,
       },
@@ -57,8 +56,8 @@ export class UserService {
     return { user: user, transactions: userTransactions };
   }
 
-  async findUsersByPartialUUID(partialUUID: string): Promise<User[]> {
-    const users = await this.prisma.user.findMany({
+  async findUsersByPartialUUID(partialUUID: string) {
+    const users = await this.prisma.accounts.findMany({
       where: {
         uuid: {
           contains: partialUUID,
@@ -72,7 +71,7 @@ export class UserService {
   }
 
   async existsUser(uuid: string) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.accounts.findUnique({
       where: {
         uuid: uuid,
       },
@@ -82,7 +81,7 @@ export class UserService {
   }
 
   async lockUser(uuid: string) {
-    await this.prisma.user
+    await this.prisma.accounts
       .update({
         where: {
           uuid: uuid,
@@ -97,7 +96,7 @@ export class UserService {
   }
 
   async unlockUser(uuid: string) {
-    await this.prisma.user
+    await this.prisma.accounts
       .update({
         where: {
           uuid: uuid,

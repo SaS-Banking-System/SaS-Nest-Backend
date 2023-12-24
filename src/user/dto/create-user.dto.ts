@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString } from 'class-validator';
+import { IsInt, IsString, Min } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -10,10 +10,11 @@ export class CreateUserDto {
   uuid: string;
 
   @IsInt()
+  @Min(0)
   @ApiProperty({
     description: 'startbalance of the user',
     type: Number,
-    minimum: 1,
+    minimum: 0,
   })
   balance: number;
 }
