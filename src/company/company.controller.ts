@@ -64,7 +64,7 @@ export class CompanyController {
     await this.companyService.deleteCompany(deleteCompanyDto);
   }
 
-  @Get(':code')
+  @Get('info/:code')
   @ApiOkResponse({
     description: 'Get company info',
   })
