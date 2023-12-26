@@ -47,7 +47,7 @@ export class TransactionService {
       if (senderAfterTransaction.balance < 0)
         throw new ForbiddenException('sender balance too low');
 
-      const receiverCompanyData = await tx.companyData.findUnique({
+      const receiverCompanyData = await tx.company.findUnique({
         where: {
           uuid: createTransactionDto.receiver,
         },

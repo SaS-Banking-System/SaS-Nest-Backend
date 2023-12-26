@@ -23,7 +23,7 @@ model Accounts {
   balance Int
 }
 
-model CompanyData {
+model Company {
   id        Int    @id @default(autoincrement())
   uuid      String @unique
   name      String @unique
