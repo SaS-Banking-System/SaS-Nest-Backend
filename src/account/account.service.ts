@@ -11,10 +11,10 @@ import { DeleteAccountDto } from './dto/delete-account.dto';
 
 @Injectable()
 export class AccountService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async createAccount(createAccountDto: CreateAccountDto) {
-    await this.prisma.accounts
+    await this.prisma.account
       .create({
         data: createAccountDto,
       })
@@ -24,7 +24,7 @@ export class AccountService {
   }
 
   async deleteAccount(deleteAccountDto: DeleteAccountDto) {
-    await this.prisma.accounts
+    await this.prisma.account
       .delete({
         where: {
           uuid: deleteAccountDto.uuid,
@@ -36,11 +36,11 @@ export class AccountService {
   }
 
   async findAll() {
-    return this.prisma.accounts.findMany();
+    return this.prisma.account.findMany();
   }
 
   async getAccountInfo(uuid: string) {
-    const account = await this.prisma.accounts.findUnique({
+    const account = await this.prisma.account.findUnique({
       where: {
         uuid: uuid,
       },
@@ -58,7 +58,7 @@ export class AccountService {
   }
 
   async findAccountsByPartialUUID(partialUUID: string) {
-    const accounts = await this.prisma.accounts.findMany({
+    const accounts = await this.prisma.account.findMany({
       where: {
         uuid: {
           contains: partialUUID,
@@ -72,7 +72,7 @@ export class AccountService {
   }
 
   async existsAccount(uuid: string) {
-    const account = await this.prisma.accounts.findUnique({
+    const account = await this.prisma.account.findUnique({
       where: {
         uuid: uuid,
       },
@@ -82,7 +82,7 @@ export class AccountService {
   }
 
   async lockAccount(uuid: string) {
-    const account = await this.prisma.accounts.findUnique({
+    const account = await this.prisma.account.findUnique({
       where: {
         uuid: uuid,
       },
@@ -90,7 +90,7 @@ export class AccountService {
 
     if (account.locked) throw new ForbiddenException('account already locked');
 
-    await this.prisma.accounts
+    await this.prisma.account
       .update({
         where: {
           uuid: uuid,
@@ -105,7 +105,7 @@ export class AccountService {
   }
 
   async unlockAccount(uuid: string) {
-    const account = await this.prisma.accounts.findUnique({
+    const account = await this.prisma.account.findUnique({
       where: {
         uuid: uuid,
       },
@@ -114,7 +114,7 @@ export class AccountService {
     if (!account.locked)
       throw new ForbiddenException('account already unlocked');
 
-    await this.prisma.accounts
+    await this.prisma.account
       .update({
         where: {
           uuid: uuid,

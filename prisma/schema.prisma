@@ -16,7 +16,7 @@ model Admin {
   password String
 }
 
-model Accounts {
+model Account {
   id      Int     @id @default(autoincrement())
   uuid    String  @unique
   locked  Boolean @default(false)

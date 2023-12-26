@@ -6,7 +6,7 @@ import 'dotenv/config';
 
 @Injectable()
 export class TransactionService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async findAll() {
     const transctions = await this.prisma.transaction.findMany();
@@ -15,13 +15,13 @@ export class TransactionService {
 
   async newTransaction(createTransactionDto: CreateTransactionDto) {
     return await this.prisma.$transaction(async (tx) => {
-      const receiver = await tx.accounts.findUnique({
+      const receiver = await tx.account.findUnique({
         where: {
           uuid: createTransactionDto.receiver,
         },
       });
 
-      const sender = await tx.accounts.findUnique({
+      const sender = await tx.account.findUnique({
         where: {
           uuid: createTransactionDto.sender,
         },
@@ -33,7 +33,7 @@ export class TransactionService {
       if (!receiver) throw new ForbiddenException('receiver not found');
       if (receiver.locked) throw new ForbiddenException('receiver is locked');
 
-      const senderAfterTransaction = await tx.accounts.update({
+      const senderAfterTransaction = await tx.account.update({
         where: {
           uuid: createTransactionDto.sender,
         },
@@ -55,7 +55,7 @@ export class TransactionService {
 
       // if receiver is not a company
       if (!receiverCompanyData) {
-        await tx.accounts.update({
+        await tx.account.update({
           where: {
             uuid: createTransactionDto.receiver,
           },
@@ -87,7 +87,7 @@ export class TransactionService {
         // amount that the receiver gets
         const amountAfterTax = createTransactionDto.amount - stateAmount;
 
-        await tx.accounts.update({
+        await tx.account.update({
           where: {
             uuid: createTransactionDto.receiver,
           },
@@ -98,7 +98,7 @@ export class TransactionService {
           },
         });
 
-        await tx.accounts.update({
+        await tx.account.update({
           where: {
             uuid: process.env.STATE_ACCOUNT,
           },
