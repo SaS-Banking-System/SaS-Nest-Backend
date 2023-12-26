@@ -1,11 +1,16 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { DeleteCompanyDto } from './dto/delete-company.dto';
 
 @Injectable()
 export class CompanyService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
     return await this.prisma.company.findMany();
@@ -28,6 +33,23 @@ export class CompanyService {
       })
       .catch(() => {
         throw new BadRequestException('could not delete company');
+      });
+  }
+
+  async getInfo(code: string) {
+    return await this.prisma.company
+      .findUnique({
+        where: {
+          code: code,
+        },
+        select: {
+          name: true,
+          code: true,
+          taxAmount: true,
+        },
+      })
+      .catch(() => {
+        throw new NotFoundException('no company found');
       });
   }
 }

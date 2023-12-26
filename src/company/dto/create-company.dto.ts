@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   Max,
-  IsInt,
   IsString,
   MaxLength,
   Min,
@@ -12,21 +11,23 @@ import {
 export class CreateCompanyDto {
   @IsString()
   @ApiProperty({
-    type: String
+    type: String,
   })
   uuid: string;
 
   @IsString()
   @ApiProperty({
-    type: String
+    type: String,
   })
   name: string;
 
-  @IsInt()
+  @IsString()
+  @MinLength(2)
+  @MaxLength(4)
   @ApiProperty({
-    type: Number
+    type: Number,
   })
-  code: number;
+  code: string;
 
   @IsNumber()
   @Min(0)
@@ -35,7 +36,6 @@ export class CreateCompanyDto {
     type: Number,
     minimum: 0,
     maximum: 1,
-
   })
   taxAmount: number;
 }

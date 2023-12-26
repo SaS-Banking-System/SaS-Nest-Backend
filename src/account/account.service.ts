@@ -11,7 +11,7 @@ import { DeleteAccountDto } from './dto/delete-account.dto';
 
 @Injectable()
 export class AccountService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async createAccount(createAccountDto: CreateAccountDto) {
     await this.prisma.account

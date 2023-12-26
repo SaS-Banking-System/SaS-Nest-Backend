@@ -27,7 +27,7 @@ model Company {
   id        Int    @id @default(autoincrement())
   uuid      String @unique
   name      String @unique
-  code      Int    @unique
+  code      String @unique
   taxAmount Float
 }
 

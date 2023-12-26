@@ -6,7 +6,7 @@ import 'dotenv/config';
 
 @Injectable()
 export class TransactionService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
     const transctions = await this.prisma.transaction.findMany();

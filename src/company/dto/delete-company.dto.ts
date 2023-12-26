@@ -4,7 +4,7 @@ import { IsString } from 'class-validator';
 export class DeleteCompanyDto {
   @IsString()
   @ApiProperty({
-    type: String
+    type: String,
   })
   uuid: string;
 }
