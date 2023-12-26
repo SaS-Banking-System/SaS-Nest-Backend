@@ -3,6 +3,7 @@ import {
   NotFoundException,
   Injectable,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateAccountDto } from './dto/create-account.dto';
@@ -10,7 +11,7 @@ import { DeleteAccountDto } from './dto/delete-account.dto';
 
 @Injectable()
 export class AccountService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async createAccount(createAccountDto: CreateAccountDto) {
     await this.prisma.accounts
@@ -81,6 +82,14 @@ export class AccountService {
   }
 
   async lockAccount(uuid: string) {
+    const account = await this.prisma.accounts.findUnique({
+      where: {
+        uuid: uuid,
+      },
+    });
+
+    if (account.locked) throw new ForbiddenException('account already locked');
+
     await this.prisma.accounts
       .update({
         where: {
@@ -96,6 +105,15 @@ export class AccountService {
   }
 
   async unlockAccount(uuid: string) {
+    const account = await this.prisma.accounts.findUnique({
+      where: {
+        uuid: uuid,
+      },
+    });
+
+    if (!account.locked)
+      throw new ForbiddenException('account already unlocked');
+
     await this.prisma.accounts
       .update({
         where: {

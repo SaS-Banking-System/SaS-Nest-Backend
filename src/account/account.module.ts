@@ -7,4 +7,4 @@ import { PrismaService } from 'src/prisma/prisma.service';
   controllers: [AccountController],
   providers: [AccountService, PrismaService],
 })
-export class AccountModule { }
+export class AccountModule {}

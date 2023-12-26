@@ -15,6 +15,7 @@ import {
   ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
@@ -25,7 +26,7 @@ import { DeleteAccountDto } from './dto/delete-account.dto';
 @ApiTags('Account')
 @Controller('account')
 export class AccountController {
-  constructor(private readonly accountService: AccountService) { }
+  constructor(private readonly accountService: AccountService) {}
 
   @Get()
   @UseGuards(AuthGuard)
@@ -108,6 +109,9 @@ export class AccountController {
   @ApiNotFoundResponse({
     description: 'Account with supplied uuid not found',
   })
+  @ApiForbiddenResponse({
+    description: 'Account already locked',
+  })
   async lockAccount(@Param('uuid') uuid: string) {
     await this.accountService.lockAccount(uuid);
   }
@@ -121,6 +125,9 @@ export class AccountController {
   })
   @ApiNotFoundResponse({
     description: 'Account with supplied uuid not found',
+  })
+  @ApiForbiddenResponse({
+    description: 'Account already unlocked',
   })
   async unlockAccount(@Param('uuid') uuid: string) {
     await this.accountService.unlockAccount(uuid);
