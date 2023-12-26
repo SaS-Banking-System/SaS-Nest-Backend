@@ -10,7 +10,7 @@ import { DeleteCompanyDto } from './dto/delete-company.dto';
 
 @Injectable()
 export class CompanyService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async findAll() {
     return await this.prisma.company.findMany();
@@ -37,7 +37,7 @@ export class CompanyService {
   }
 
   async getInfo(code: string) {
-    return await this.prisma.company
+    const company = await this.prisma.company
       .findUnique({
         where: {
           code: code,
@@ -48,8 +48,9 @@ export class CompanyService {
           taxAmount: true,
         },
       })
-      .catch(() => {
-        throw new NotFoundException('no company found');
-      });
+
+    if (!company) throw new NotFoundException('No company with given code found')
+
+    return company
   }
 }
