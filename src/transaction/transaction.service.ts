@@ -82,7 +82,7 @@ export class TransactionService {
         const taxAmount = receiverCompanyData.taxAmount;
 
         // amount that the state gets
-        const stateAmount = createTransactionDto.amount * taxAmount;
+        const stateAmount = Math.floor(createTransactionDto.amount * taxAmount);
 
         // amount that the receiver gets
         const amountAfterTax = createTransactionDto.amount - stateAmount;
