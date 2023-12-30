@@ -2,7 +2,7 @@ import { ForbiddenException } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import 'dotenv/config';
+import 'dotenv-defaults/config';
 
 @Injectable()
 export class TransactionService {

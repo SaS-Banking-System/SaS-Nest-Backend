@@ -68,7 +68,7 @@ export class AccountService {
 
     accountTransactions.map((transaction: any) => {
       transaction.createdAt = transaction.createdAt.toLocaleString(
-        'de-DE',
+        process.env.TIMESTAMP_LANG,
         options,
       );
     });
