@@ -54,6 +54,27 @@ export class AccountService {
       },
     });
 
+    if (!accountTransactions) return { account: account, transactions: null };
+
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      timeZone: 'Europe/Berlin',
+    };
+
+    accountTransactions.map((transaction: any) => {
+      transaction.createdAt = transaction.createdAt.toLocaleString(
+        'de-DE',
+        options,
+      );
+    });
+
+    console.log(accountTransactions);
+
     return { account: account, transactions: accountTransactions };
   }
 
