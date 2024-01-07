@@ -73,8 +73,6 @@ export class AccountService {
       );
     });
 
-    console.log(accountTransactions);
-
     return { account: account, transactions: accountTransactions };
   }
 

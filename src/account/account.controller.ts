@@ -68,12 +68,12 @@ export class AccountController {
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
   @ApiOkResponse({
-    description: 'Find account by uuid',
+    description: 'Find account by partial uuid (like a search)',
   })
   @ApiNotFoundResponse({
     description: 'No account with given uuid was found',
   })
-  async findAccountsByPartialUUID(@Param('uuid') partialUUID: string) {
+  async findAccountsByPartialUUID(@Param('partial-uuid') partialUUID: string) {
     return await this.accountService.findAccountsByPartialUUID(partialUUID);
   }
 
