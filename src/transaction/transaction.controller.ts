@@ -15,6 +15,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { CreateCompanyTransactionDto } from './dto/create-company-transaction.dto';
 
 @ApiTags('Transaction')
 @Controller('transaction')
@@ -42,6 +43,24 @@ export class TransactionController {
   async createTransaction(@Body() createTransactionDto: CreateTransactionDto) {
     const sender =
       await this.transactionService.newTransaction(createTransactionDto);
+    return sender.balance;
+  }
+
+  @Post('company/new')
+  @HttpCode(200)
+  @ApiOkResponse({
+    description: 'Transaction was successful',
+  })
+  @ApiForbiddenResponse({
+    description: 'Something went wrong',
+  })
+  async createComanyTransaction(
+    @Body() createCompanyTransactionDto: CreateCompanyTransactionDto,
+  ) {
+    const sender = await this.transactionService.newCompanyTransaction(
+      createCompanyTransactionDto,
+    );
+
     return sender.balance;
   }
 }

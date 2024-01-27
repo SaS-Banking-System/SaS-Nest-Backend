@@ -1,8 +1,9 @@
-import { ForbiddenException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import 'dotenv-defaults/config';
+import { CreateCompanyTransactionDto } from './dto/create-company-transaction.dto';
 
 @Injectable()
 export class TransactionService {
@@ -121,5 +122,25 @@ export class TransactionService {
 
       return senderAfterTransaction;
     });
+  }
+
+  async newCompanyTransaction(
+    createCompanyTransactionDto: CreateCompanyTransactionDto,
+  ) {
+    const company = await this.prisma.company.findUnique({
+      where: {
+        code: createCompanyTransactionDto.code,
+      },
+    });
+
+    if (!company) throw new NotFoundException('no company with code found');
+
+    const createTransactionDto: CreateTransactionDto = {
+      sender: createCompanyTransactionDto.sender,
+      receiver: company.uuid,
+      amount: createCompanyTransactionDto.amount,
+    };
+
+    return await this.newTransaction(createTransactionDto);
   }
 }
