@@ -36,6 +36,6 @@ model Transaction {
   sender    String
   receiver  String
   amount    Int
-  tax       Int?      @default(0)
+  tax       Int?     @default(0)
   createdAt DateTime @default(now())
 }
