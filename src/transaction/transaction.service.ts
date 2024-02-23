@@ -72,8 +72,7 @@ export class TransactionService {
             sender: createTransactionDto.sender,
             receiver: createTransactionDto.receiver,
             amount: createTransactionDto.amount,
-            // -1 indicates that the transaction was between 2 non company accounts
-            tax: -1,
+            tax: 0,
           },
         });
 
