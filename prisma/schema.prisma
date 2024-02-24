@@ -36,6 +36,7 @@ model Transaction {
   sender    String
   receiver  String
   amount    Int
+  private   Boolean
   tax       Int?     @default(0)
   createdAt DateTime @default(now())
 }

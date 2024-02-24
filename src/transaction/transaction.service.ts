@@ -7,7 +7,7 @@ import { CreateCompanyTransactionDto } from './dto/create-company-transaction.dt
 
 @Injectable()
 export class TransactionService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async findAll() {
     const transctions = await this.prisma.transaction.findMany();
@@ -73,6 +73,7 @@ export class TransactionService {
             receiver: createTransactionDto.receiver,
             amount: createTransactionDto.amount,
             tax: 0,
+            private: true,
           },
         });
 
@@ -115,6 +116,7 @@ export class TransactionService {
             receiver: createTransactionDto.receiver,
             amount: amountAfterTax,
             tax: stateAmount,
+            private: false,
           },
         });
       }
