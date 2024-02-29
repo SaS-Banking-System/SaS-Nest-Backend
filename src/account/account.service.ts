@@ -5,7 +5,7 @@ import {
   BadRequestException,
   ForbiddenException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { DeleteAccountDto } from './dto/delete-account.dto';
 
@@ -101,49 +101,53 @@ export class AccountService {
   }
 
   async lockAccount(uuid: string) {
-    const account = await this.prisma.account.findUnique({
-      where: {
-        uuid: uuid,
-      },
-    });
-
-    if (account.locked) throw new ForbiddenException('account already locked');
-
-    await this.prisma.account
-      .update({
+    const account = await this.prisma.account
+      .findUnique({
         where: {
           uuid: uuid,
-        },
-        data: {
-          locked: true,
         },
       })
       .catch(() => {
         throw new NotFoundException('account with supplied uuid not found');
       });
-  }
 
-  async unlockAccount(uuid: string) {
-    const account = await this.prisma.account.findUnique({
+    if (account.locked) throw new ForbiddenException('account already locked');
+
+    await this.prisma.account.update({
       where: {
         uuid: uuid,
       },
+      data: {
+        locked: true,
+      },
     });
+
+    return true;
+  }
+
+  async unlockAccount(uuid: string) {
+    const account = await this.prisma.account
+      .findUnique({
+        where: {
+          uuid: uuid,
+        },
+      })
+      .catch(() => {
+        throw new NotFoundException('account with supplied uuid not found');
+      });
 
     if (!account.locked)
       throw new ForbiddenException('account already unlocked');
 
-    await this.prisma.account
-      .update({
-        where: {
-          uuid: uuid,
-        },
-        data: {
-          locked: false,
-        },
-      })
-      .catch(() => {
-        throw new NotFoundException('account with supplied uuid not found');
-      });
+    await this.prisma.account.update({
+      where: {
+        uuid: uuid,
+      },
+      data: {
+        locked: false,
+      },
+    });
+
+    return true;
   }
 }
