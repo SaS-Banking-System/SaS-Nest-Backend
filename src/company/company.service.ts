@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { DeleteCompanyDto } from './dto/delete-company.dto';
 
@@ -32,7 +32,7 @@ export class CompanyService {
         where: deleteCompanyDto,
       })
       .catch(() => {
-        throw new BadRequestException('could not delete company');
+        throw new NotFoundException('could not delete company');
       });
   }
 

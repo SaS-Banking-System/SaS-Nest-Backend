@@ -10,24 +10,24 @@ import {
 import { CreateAccountDto } from './dto/create-account.dto';
 import { DeleteAccountDto } from './dto/delete-account.dto';
 
+interface Account {
+  id: number;
+  uuid: string;
+  locked: boolean;
+  balance: number;
+}
+
+interface Transaction {
+  id: number;
+  sender: string;
+  receiver: string;
+  amount: number;
+  private: boolean;
+  tax: number;
+  createdAt: Date;
+}
+
 describe('AccountService', () => {
-  interface Account {
-    id: number;
-    uuid: string;
-    locked: boolean;
-    balance: number;
-  }
-
-  interface Transaction {
-    id: number;
-    sender: string;
-    receiver: string;
-    amount: number;
-    private: boolean;
-    tax: number;
-    createdAt: Date;
-  }
-
   let service: AccountService;
   let prisma: PrismaService;
 
@@ -304,7 +304,9 @@ describe('AccountService', () => {
       });
     });
 
-    await expect(service.unlockAccount(uuid)).rejects.toThrow(NotFoundException);
+    await expect(service.unlockAccount(uuid)).rejects.toThrow(
+      NotFoundException,
+    );
   });
 
   it('should not unlock account, user already unlocked', async () => {
@@ -326,6 +328,8 @@ describe('AccountService', () => {
       });
     });
 
-    await expect(service.unlockAccount(uuid)).rejects.toThrow(ForbiddenException);
+    await expect(service.unlockAccount(uuid)).rejects.toThrow(
+      ForbiddenException,
+    );
   });
 });
