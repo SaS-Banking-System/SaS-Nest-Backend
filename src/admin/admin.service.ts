@@ -1,6 +1,11 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateAdminDto } from './dto/create-admin.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { hash as bcrypt_hash } from 'bcrypt';
 import { DeleteAdminDto } from './dto/delete-admin.dto';
 
@@ -29,7 +34,7 @@ export class AdminService {
         },
       })
       .catch((e) => {
-        throw new ForbiddenException(e);
+        throw new ConflictException(e);
       });
   }
 
@@ -41,7 +46,7 @@ export class AdminService {
         },
       })
       .catch((e) => {
-        throw new ForbiddenException(e);
+        throw new NotFoundException(e);
       });
   }
 }
