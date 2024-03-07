@@ -33,7 +33,7 @@ export class AdminService {
           password: hashedPassword,
         },
       })
-      .catch((e) => {
+      .catch(e => {
         throw new ConflictException(e);
       });
   }
@@ -45,7 +45,7 @@ export class AdminService {
           username: deleteAdminDto.username,
         },
       })
-      .catch((e) => {
+      .catch(e => {
         throw new NotFoundException(e);
       });
   }

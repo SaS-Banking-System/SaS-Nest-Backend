@@ -24,7 +24,7 @@ export class AuthController {
   async signIn(@Body() signInDto: SignInDto) {
     return await this.authService.signIn(
       signInDto.username,
-      signInDto.password,
+      signInDto.password
     );
   }
 }

@@ -15,7 +15,7 @@ export class TransactionService {
   }
 
   async newTransaction(createTransactionDto: CreateTransactionDto) {
-    return await this.prisma.$transaction(async (tx) => {
+    return await this.prisma.$transaction(async tx => {
       const receiver = await tx.account.findUnique({
         where: {
           uuid: createTransactionDto.receiver,
@@ -126,7 +126,7 @@ export class TransactionService {
   }
 
   async newCompanyTransaction(
-    createCompanyTransactionDto: CreateCompanyTransactionDto,
+    createCompanyTransactionDto: CreateCompanyTransactionDto
   ) {
     const company = await this.prisma.company.findUnique({
       where: {

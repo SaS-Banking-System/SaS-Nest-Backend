@@ -46,7 +46,7 @@ describe('CompanyService', () => {
     });
 
     await expect(service.createCompany(companyCreateData)).rejects.toThrow(
-      ConflictException,
+      ConflictException
     );
   });
 
@@ -65,7 +65,7 @@ describe('CompanyService', () => {
     });
 
     await expect(service.deleteCompany(companyDeleteData)).rejects.toThrow(
-      NotFoundException,
+      NotFoundException
     );
   });
 
@@ -82,7 +82,7 @@ describe('CompanyService', () => {
     prisma.company.findUnique = jest.fn().mockResolvedValue(companyInfo);
 
     await expect(service.getInfo(companyCode)).resolves.toStrictEqual(
-      companyInfo,
+      companyInfo
     );
   });
 
@@ -93,7 +93,7 @@ describe('CompanyService', () => {
     prisma.company.findUnique = jest.fn().mockResolvedValue(null);
 
     await expect(service.getInfo(companyCode)).rejects.toThrow(
-      NotFoundException,
+      NotFoundException
     );
   });
 });

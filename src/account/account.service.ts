@@ -46,7 +46,7 @@ export class AccountService {
     let CSVUsers: CSVUser[] = [];
     let addedUsers: number = 0;
 
-    parsedFile.forEach((user) => {
+    parsedFile.forEach(user => {
       if (!user[1] || !user[0]) return;
 
       let csvUser: CSVUser = {
@@ -60,7 +60,7 @@ export class AccountService {
       CSVUsers.push(csvUser);
     });
 
-    await this.prisma.$transaction(async (tx) => {
+    await this.prisma.$transaction(async tx => {
       await Promise.all(
         CSVUsers.map(async (user: CSVUser) => {
           await tx.account.create({
@@ -72,7 +72,7 @@ export class AccountService {
               locked: false,
             },
           });
-        }),
+        })
       );
     });
 
@@ -125,7 +125,7 @@ export class AccountService {
     accountTransactions.map((transaction: any) => {
       transaction.createdAt = transaction.createdAt.toLocaleString(
         process.env.TIMESTAMP_LANG,
-        options,
+        options
       );
     });
 

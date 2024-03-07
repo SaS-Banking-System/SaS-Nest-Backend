@@ -7,7 +7,7 @@ import { compare as bcrypt_compare } from 'bcrypt';
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly prisma: PrismaService,
+    private readonly prisma: PrismaService
   ) {}
 
   async signIn(username: string, password: string) {

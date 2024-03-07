@@ -38,7 +38,7 @@ describe('AdminService', () => {
     });
 
     await expect(service.createAdmin(createAdminData)).rejects.toThrow(
-      ConflictException,
+      ConflictException
     );
   });
 
@@ -55,7 +55,7 @@ describe('AdminService', () => {
     });
 
     await expect(service.deleteAdmin(deleteAdminData)).rejects.toThrow(
-      NotFoundException,
+      NotFoundException
     );
   });
 });

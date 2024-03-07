@@ -55,10 +55,10 @@ export class TransactionController {
     description: 'Something went wrong',
   })
   async createComanyTransaction(
-    @Body() createCompanyTransactionDto: CreateCompanyTransactionDto,
+    @Body() createCompanyTransactionDto: CreateCompanyTransactionDto
   ) {
     const sender = await this.transactionService.newCompanyTransaction(
-      createCompanyTransactionDto,
+      createCompanyTransactionDto
     );
 
     return sender.balance;

@@ -14,7 +14,7 @@ async function bootstrap() {
     .addBearerAuth()
     .setTitle('Online-Banking API')
     .setDescription(
-      'Online-Banking API for the [frontend](https://github.com/SaS-Banking-System/SaS-Web-Frontend)',
+      'Online-Banking API for the [frontend](https://github.com/SaS-Banking-System/SaS-Web-Frontend)'
     )
     .setVersion('0.1')
     .build();

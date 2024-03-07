@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { DeleteAccountDto } from './dto/delete-account.dto';
+import { mock } from 'node:test';
 
 interface Account {
   id: number;
@@ -61,7 +62,7 @@ describe('AccountService', () => {
     });
 
     await expect(service.createAccount(accountCreateData)).rejects.toThrow(
-      ConflictException,
+      ConflictException
     );
   });
 
@@ -70,18 +71,9 @@ describe('AccountService', () => {
        Hardy, Zeph,
        Doyle, Tilda,
       `;
-    const mockFile: Express.Multer.File = {
-      fieldname: null,
-      originalname: null,
-      encoding: null,
-      mimetype: null,
-      size: null,
-      stream: null,
-      destination: null,
-      filename: null,
-      path: null,
-      buffer: Buffer.from(mockFileContents),
-    };
+
+    let mockFile = {} as Express.Multer.File;
+    mockFile.buffer = Buffer.from(mockFileContents);
 
     prisma.account.create = jest.fn().mockResolvedValue(undefined);
 
@@ -91,18 +83,8 @@ describe('AccountService', () => {
   it('should not create users by csv, empty file', async () => {
     const mockFileContents = '';
 
-    const mockFile: Express.Multer.File = {
-      fieldname: null,
-      originalname: null,
-      encoding: null,
-      mimetype: null,
-      size: null,
-      stream: null,
-      destination: null,
-      filename: null,
-      path: null,
-      buffer: Buffer.from(mockFileContents),
-    };
+    let mockFile = {} as Express.Multer.File;
+    mockFile.buffer = Buffer.from(mockFileContents);
 
     prisma.account.create = jest.fn().mockResolvedValue(undefined);
 
@@ -114,18 +96,9 @@ describe('AccountService', () => {
        Hardy, Zeph,
        Doyle, Tilda,
       `;
-    const mockFile: Express.Multer.File = {
-      fieldname: null,
-      originalname: null,
-      encoding: null,
-      mimetype: null,
-      size: null,
-      stream: null,
-      destination: null,
-      filename: null,
-      path: null,
-      buffer: Buffer.from(mockFileContents),
-    };
+
+    let mockFile = {} as Express.Multer.File;
+    mockFile.buffer = Buffer.from(mockFileContents);
 
     prisma.account.create = jest.fn().mockResolvedValue(undefined);
 
@@ -137,23 +110,14 @@ describe('AccountService', () => {
        Hardy, Something, Zeph,
        Doyle, Tilda,
       `;
-    const mockFile: Express.Multer.File = {
-      fieldname: null,
-      originalname: null,
-      encoding: null,
-      mimetype: null,
-      size: null,
-      stream: null,
-      destination: null,
-      filename: null,
-      path: null,
-      buffer: Buffer.from(mockFileContents),
-    };
+
+    let mockFile = {} as Express.Multer.File;
+    mockFile.buffer = Buffer.from(mockFileContents);
 
     prisma.account.create = jest.fn().mockResolvedValue(undefined);
 
     await expect(service.createAccountByCSV(mockFile)).rejects.toThrow(
-      BadRequestException,
+      BadRequestException
     );
   });
 
@@ -171,7 +135,7 @@ describe('AccountService', () => {
     });
 
     await expect(service.deleteAccount(accountDeleteData)).rejects.toThrow(
-      BadRequestException,
+      BadRequestException
     );
   });
 
@@ -284,7 +248,7 @@ describe('AccountService', () => {
       .mockResolvedValueOnce([accountData]);
 
     await expect(
-      service.findAccountsByPartialUUID(partialUUID),
+      service.findAccountsByPartialUUID(partialUUID)
     ).resolves.toStrictEqual([accountData]);
   });
 
@@ -297,7 +261,7 @@ describe('AccountService', () => {
       .mockResolvedValueOnce([]);
 
     await expect(
-      service.findAccountsByPartialUUID(partialUUID),
+      service.findAccountsByPartialUUID(partialUUID)
     ).rejects.toThrow(NotFoundException);
   });
 
@@ -307,7 +271,7 @@ describe('AccountService', () => {
     prisma.account.findUnique = jest.fn().mockResolvedValueOnce(null);
 
     await expect(service.existsAccount(uuid)).rejects.toThrow(
-      NotFoundException,
+      NotFoundException
     );
   });
 
@@ -399,7 +363,7 @@ describe('AccountService', () => {
     });
 
     await expect(service.unlockAccount(uuid)).rejects.toThrow(
-      NotFoundException,
+      NotFoundException
     );
   });
 
@@ -423,7 +387,7 @@ describe('AccountService', () => {
     });
 
     await expect(service.unlockAccount(uuid)).rejects.toThrow(
-      ForbiddenException,
+      ForbiddenException
     );
   });
 });
