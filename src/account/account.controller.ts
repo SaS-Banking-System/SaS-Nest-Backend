@@ -22,7 +22,7 @@ import {
   ApiOkResponse,
   ApiTags,
   ApiConsumes,
-  ApiBody
+  ApiBody,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { DeleteAccountDto } from './dto/delete-account.dto';
@@ -32,7 +32,7 @@ import { CreateAccountByCSVDto } from './dto/create-account-by-csv.dto';
 @ApiTags('Account')
 @Controller('account')
 export class AccountController {
-  constructor(private readonly accountService: AccountService) { }
+  constructor(private readonly accountService: AccountService) {}
 
   @Get()
   @UseGuards(AuthGuard)
@@ -64,10 +64,10 @@ export class AccountController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'csv file of users',
-    type: CreateAccountByCSVDto
+    type: CreateAccountByCSVDto,
   })
   async createAccountByCSV(@UploadedFile() file: Express.Multer.File) {
-    return this.accountService.createAccountByCSV(file)
+    return this.accountService.createAccountByCSV(file);
   }
 
   @Post('delete')

@@ -8,7 +8,7 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { DeleteAccountDto } from './dto/delete-account.dto';
-import { parse as csv_parse } from 'csv-parse/sync'
+import { parse as csv_parse } from 'csv-parse/sync';
 import { randomUUID } from 'crypto';
 
 interface CSVUser {
@@ -19,7 +19,7 @@ interface CSVUser {
 
 @Injectable()
 export class AccountService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async createAccount(createAccountDto: CreateAccountDto) {
     await this.prisma.account
@@ -31,44 +31,50 @@ export class AccountService {
       });
   }
 
-
   async createAccountByCSV(file: Express.Multer.File) {
-    const fileContent = file.buffer.toString('utf8')
+    const fileContent = file.buffer.toString('utf8');
 
     let parsedFile;
 
     try {
-      parsedFile = csv_parse(fileContent)
+      parsedFile = csv_parse(fileContent);
     } catch {
-      throw new BadRequestException('could not parse csv file')
+      throw new BadRequestException('could not parse csv file');
     }
 
     let CSVUsers: CSVUser[] = [];
+    let addedUsers: number = 0;
 
-    parsedFile.forEach(user => {
+    parsedFile.forEach((user) => {
       let csvUser: CSVUser = {
         firstName: user[1],
         lastName: user[0],
-        uuid: randomUUID()
-      }
+        uuid: randomUUID(),
+      };
 
-      CSVUsers.push(csvUser)
+      if (!user[1] || !user[0]) return;
+      addedUsers++;
+
+      CSVUsers.push(csvUser);
     });
 
-    return await this.prisma.$transaction(async (tx) => {
-      await Promise.all(CSVUsers.map(async (user: CSVUser) => {
-        await tx.account.create({
-          data: {
-            uuid: user.uuid,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            balance: 0,
-            locked: false,
-          }
-        })
-      })
-      )
-    })
+    await this.prisma.$transaction(async (tx) => {
+      await Promise.all(
+        CSVUsers.map(async (user: CSVUser) => {
+          await tx.account.create({
+            data: {
+              uuid: user.uuid,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              balance: 0,
+              locked: false,
+            },
+          });
+        }),
+      );
+    });
+
+    return addedUsers;
   }
 
   async deleteAccount(deleteAccountDto: DeleteAccountDto) {
