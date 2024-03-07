@@ -7,6 +7,8 @@ import {
   HttpCode,
   Patch,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
@@ -19,9 +21,13 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
+  ApiConsumes,
+  ApiBody,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { DeleteAccountDto } from './dto/delete-account.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CreateAccountByCSVDto } from './dto/create-account-by-csv.dto';
 
 @ApiTags('Account')
 @Controller('account')
@@ -49,6 +55,19 @@ export class AccountController {
   })
   async createAccount(@Body() createAccountDto: CreateAccountDto) {
     await this.accountService.createAccount(createAccountDto);
+  }
+
+  @Post('create/csv')
+  @UseGuards(AuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'csv file of users',
+    type: CreateAccountByCSVDto,
+  })
+  async createAccountByCSV(@UploadedFile() file: Express.Multer.File) {
+    return this.accountService.createAccountByCSV(file);
   }
 
   @Post('delete')

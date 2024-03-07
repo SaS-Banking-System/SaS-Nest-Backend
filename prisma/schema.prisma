@@ -18,6 +18,8 @@ model Admin {
 
 model Account {
   id      Int     @id @default(autoincrement())
+  firstName String?
+  lastName String?
   uuid    String  @unique
   locked  Boolean @default(false)
   balance Int
@@ -36,7 +38,7 @@ model Transaction {
   sender    String
   receiver  String
   amount    Int
-  private   Boolean
-  tax       Int?     @default(0)
+  tax       Int?      @default(0)
   createdAt DateTime @default(now())
 }
+
