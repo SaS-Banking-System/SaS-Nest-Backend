@@ -32,7 +32,8 @@ export class AccountService {
   }
 
   async createAccountByCSV(file: Express.Multer.File) {
-    const fileContent = file.buffer.toString('utf8');
+    const fileContent = file.buffer.toString('utf8').trim();
+    console.log(fileContent);
 
     let parsedFile;
 
@@ -46,13 +47,14 @@ export class AccountService {
     let addedUsers: number = 0;
 
     parsedFile.forEach((user) => {
+      if (!user[1] || !user[0]) return;
+
       let csvUser: CSVUser = {
-        firstName: user[1],
-        lastName: user[0],
+        firstName: user[1].trim(),
+        lastName: user[0].trim(),
         uuid: randomUUID(),
       };
 
-      if (!user[1] || !user[0]) return;
       addedUsers++;
 
       CSVUsers.push(csvUser);

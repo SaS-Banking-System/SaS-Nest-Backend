@@ -32,6 +32,8 @@ describe('AccountService', () => {
   let prisma: PrismaService;
 
   beforeEach(async () => {
+    jest.clearAllMocks();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [AccountService, PrismaService],
     }).compile();
@@ -60,6 +62,98 @@ describe('AccountService', () => {
 
     await expect(service.createAccount(accountCreateData)).rejects.toThrow(
       ConflictException,
+    );
+  });
+
+  it('should create 3 users by csv', async () => {
+    const mockFileContents = `Snyder, Ward,
+       Hardy, Zeph,
+       Doyle, Tilda,
+      `;
+    const mockFile: Express.Multer.File = {
+      fieldname: null,
+      originalname: null,
+      encoding: null,
+      mimetype: null,
+      size: null,
+      stream: null,
+      destination: null,
+      filename: null,
+      path: null,
+      buffer: Buffer.from(mockFileContents),
+    };
+
+    prisma.account.create = jest.fn().mockResolvedValue(undefined);
+
+    await expect(service.createAccountByCSV(mockFile)).resolves.toBe(3);
+  });
+
+  it('should not create users by csv, empty file', async () => {
+    const mockFileContents = '';
+
+    const mockFile: Express.Multer.File = {
+      fieldname: null,
+      originalname: null,
+      encoding: null,
+      mimetype: null,
+      size: null,
+      stream: null,
+      destination: null,
+      filename: null,
+      path: null,
+      buffer: Buffer.from(mockFileContents),
+    };
+
+    prisma.account.create = jest.fn().mockResolvedValue(undefined);
+
+    await expect(service.createAccountByCSV(mockFile)).resolves.toBe(0);
+  });
+
+  it('should not create 2 users by csv, some names are undefined', async () => {
+    const mockFileContents = `  , ,
+       Hardy, Zeph,
+       Doyle, Tilda,
+      `;
+    const mockFile: Express.Multer.File = {
+      fieldname: null,
+      originalname: null,
+      encoding: null,
+      mimetype: null,
+      size: null,
+      stream: null,
+      destination: null,
+      filename: null,
+      path: null,
+      buffer: Buffer.from(mockFileContents),
+    };
+
+    prisma.account.create = jest.fn().mockResolvedValue(undefined);
+
+    await expect(service.createAccountByCSV(mockFile)).resolves.toBe(2);
+  });
+
+  it('should not create users by csv, cannot parse file', async () => {
+    const mockFileContents = `  , ,
+       Hardy, Something, Zeph,
+       Doyle, Tilda,
+      `;
+    const mockFile: Express.Multer.File = {
+      fieldname: null,
+      originalname: null,
+      encoding: null,
+      mimetype: null,
+      size: null,
+      stream: null,
+      destination: null,
+      filename: null,
+      path: null,
+      buffer: Buffer.from(mockFileContents),
+    };
+
+    prisma.account.create = jest.fn().mockResolvedValue(undefined);
+
+    await expect(service.createAccountByCSV(mockFile)).rejects.toThrow(
+      BadRequestException,
     );
   });
 
