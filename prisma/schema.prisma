@@ -40,5 +40,6 @@ model Transaction {
   amount    Int
   tax       Int?      @default(0)
   createdAt DateTime @default(now())
+  private Boolean
 }
 
